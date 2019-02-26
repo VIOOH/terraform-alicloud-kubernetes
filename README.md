@@ -17,9 +17,6 @@ Usage
 -----
 This example can specify the following arguments to create user-defined kuberntes cluster
 
-* alicloud_access_key: The Alicloud Access Key ID
-* alicloud_secret_key: The Alicloud Access Secret Key
-* region: The ID of region in which launching resources
 * k8s_name_prefix: The name prefix of kubernetes cluster
 * k8s_number: The number of kubernetes cluster
 * k8s_worker_number: The number of worker nodes in each kubernetes cluster
