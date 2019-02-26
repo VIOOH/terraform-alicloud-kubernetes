@@ -60,7 +60,7 @@ variable "vswitch_cidrs" {
 
 variable "new_nat_gateway" {
   description = "Whether to create a new nat gateway. In this template, a new nat gateway will create a nat gateway, eip and server snat entries."
-  default     = "false"
+  default     = "true"
 }
 
 # Cluster nodes variables
