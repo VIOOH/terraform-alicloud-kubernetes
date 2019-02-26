@@ -60,19 +60,21 @@ variable "vswitch_cidrs" {
 
 variable "new_nat_gateway" {
   description = "Whether to create a new nat gateway. In this template, a new nat gateway will create a nat gateway, eip and server snat entries."
-  default     = "true"
+  default     = "false"
 }
 
 # Cluster nodes variables
 
 variable "master_instance_types" {
   description = "The ecs instance type used to launch master nodes. Default from instance typs datasource."
-  default     = ""
+  default     = ["ecs.n1.medium"]
+  type        = "list"
 }
 
 variable "worker_instance_types" {
   description = "The ecs instance type used to launch worker nodes. Default from instance typs datasource."
-  default     = ""
+  default     = ["ecs.n1.medium"]
+  type        = "list"
 }
 
 variable "master_disk_category" {
@@ -107,7 +109,7 @@ variable "k8s_number" {
 
 variable "k8s_worker_numbers" {
   description = "The number of worker nodes in each kubernetes cluster."
-  default     = 3
+  default     = [3]
 }
 
 variable "k8s_name_prefix" {

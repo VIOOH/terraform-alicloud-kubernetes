@@ -52,10 +52,10 @@ resource "alicloud_snat_entry" "default" {
 resource "alicloud_cs_kubernetes" "k8s" {
   count                 = "${var.k8s_number}"
   name                  = "${var.k8s_name_prefix == "" ? format("%s-%s", var.example_name, format(var.number_format, count.index+1)) : format("%s-%s", var.k8s_name_prefix, format(var.number_format, count.index+1))}"
-  vswitch_ids           = "${length(var.vswitch_ids) > 0 ? element(split(",", join(",", var.vswitch_ids)), count.index%length(split(",", join(",", var.vswitch_ids)))) : length(var.vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"
-  new_nat_gateway       = false
-  master_instance_types = "${var.master_instance_types == "" ? data.alicloud_instance_types.default.instance_types.0.id : var.master_instance_types}"
-  worker_instance_types = "${var.worker_instance_types == "" ? data.alicloud_instance_types.default.instance_types.0.id : var.worker_instance_types}"
+  vswitch_ids           = ["${length(var.vswitch_ids) > 0 ? element(split(",", join(",", var.vswitch_ids)), count.index%length(split(",", join(",", var.vswitch_ids)))) : length(var.vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"]
+  new_nat_gateway       = "${var.new_nat_gateway}"
+  master_instance_types = "${var.master_instance_types}"
+  worker_instance_types = "${var.worker_instance_types}"
   worker_numbers        = "${var.k8s_worker_numbers}"
   master_disk_category  = "${var.master_disk_category}"
   worker_disk_category  = "${var.worker_disk_category}"
@@ -66,6 +66,5 @@ resource "alicloud_cs_kubernetes" "k8s" {
   service_cidr          = "${var.k8s_service_cidr}"
   enable_ssh            = true
   install_cloud_monitor = true
-
-  depends_on = ["alicloud_snat_entry.default"]
+  depends_on            = ["alicloud_snat_entry.default"]
 }
