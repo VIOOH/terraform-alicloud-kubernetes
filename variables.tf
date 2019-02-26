@@ -65,12 +65,12 @@ variable "new_nat_gateway" {
 
 # Cluster nodes variables
 
-variable "master_instance_type" {
+variable "master_instance_types" {
   description = "The ecs instance type used to launch master nodes. Default from instance typs datasource."
   default     = ""
 }
 
-variable "worker_instance_type" {
+variable "worker_instance_types" {
   description = "The ecs instance type used to launch worker nodes. Default from instance typs datasource."
   default     = ""
 }
@@ -105,7 +105,7 @@ variable "k8s_number" {
   default     = 1
 }
 
-variable "k8s_worker_number" {
+variable "k8s_worker_numbers" {
   description = "The number of worker nodes in each kubernetes cluster."
   default     = 3
 }

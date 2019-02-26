@@ -19,7 +19,7 @@ This example can specify the following arguments to create user-defined kubernte
 
 * k8s_name_prefix: The name prefix of kubernetes cluster
 * k8s_number: The number of kubernetes cluster
-* k8s_worker_number: The number of worker nodes in each kubernetes cluster
+* k8s_worker_numbers: The number of worker nodes in each kubernetes cluster
 * k8s_pod_cidr: The kubernetes pod cidr block. It cannot be equals to vpc's or vswitch's and cannot be in them. If vpc's cidr block is `172.16.XX.XX/XX`,
 it had better to `192.168.XX.XX/XX` or `10.XX.XX.XX/XX`
 * k8s_service_cidr: The kubernetes service cidr block. Its setting rule is same as `k8s_pod_cidr`
