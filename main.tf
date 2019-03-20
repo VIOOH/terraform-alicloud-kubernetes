@@ -60,7 +60,7 @@ resource "alicloud_cs_kubernetes" "k8s" {
   master_disk_category  = "${var.master_disk_category}"
   worker_disk_category  = "${var.worker_disk_category}"
   master_disk_size      = "${var.master_disk_size}"
-  worker_disk_size      = "${var.master_disk_size}"
+  worker_disk_size      = "${var.worker_disk_size}"
   password              = "${var.ecs_password}"
   pod_cidr              = "${var.k8s_pod_cidr}"
   service_cidr          = "${var.k8s_service_cidr}"
