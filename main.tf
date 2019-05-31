@@ -51,7 +51,6 @@ resource "alicloud_snat_entry" "default" {
 
 resource "alicloud_cs_kubernetes" "k8s" {
   count                 = "${var.k8s_number}"
-  availability_zone     = "${var.az}"
   name                  = "${var.k8s_name_prefix == "" ? format("%s-%s", var.example_name, format(var.number_format, count.index+1)) : format("%s-%s", var.k8s_name_prefix, format(var.number_format, count.index+1))}"
   vswitch_ids           = ["${length(var.vswitch_ids) > 0 ? element(split(",", join(",", var.vswitch_ids)), count.index%length(split(",", join(",", var.vswitch_ids)))) : length(var.vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"]
   new_nat_gateway       = "${var.new_nat_gateway}"
