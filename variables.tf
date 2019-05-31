@@ -126,3 +126,7 @@ variable "k8s_service_cidr" {
   description = "The kubernetes service cidr block. It cannot be equals to vpc's or vswitch's or pod's and cannot be in them."
   default     = "172.21.0.0/20"
 }
+
+variable "az" {
+  default = "cn-shanghai-b"
+}
