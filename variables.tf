@@ -109,7 +109,7 @@ variable "k8s_number" {
 
 variable "k8s_worker_numbers" {
   description = "The number of worker nodes in each kubernetes cluster."
-  default     = [3]
+  default     = [1,2,3]
 }
 
 variable "k8s_name_prefix" {
