@@ -18,9 +18,9 @@ resource "alicloud_vpc" "vpc" {
 
 // According to the vswitch cidr blocks to launch several vswitches
 resource "alicloud_vswitch" "vswitches" {
-  count             = "${length(var.vswitch_ids) > 0 ? 0 : length(var.vswitch_cidrs)}"
+  count             = "${length(var.master_vswitch_ids) > 0 ? 0 : length(var.master_vswitch_ids)}"
   vpc_id            = "${var.vpc_id == "" ? join("", alicloud_vpc.vpc.*.id) : var.vpc_id}"
-  cidr_block        = "${element(var.vswitch_cidrs, count.index)}"
+  cidr_block        = "${element(var.master_vswitch_cidrs, count.index)}"
   availability_zone = "${lookup(data.alicloud_zones.default.zones[count.index%length(data.alicloud_zones.default.zones)], "id")}"
   name              = "${var.vswitch_name_prefix == "" ? format("%s-%s", var.example_name, format(var.number_format, count.index+1)) : format("%s-%s", var.vswitch_name_prefix, format(var.number_format, count.index+1))}"
 }
@@ -43,20 +43,21 @@ resource "alicloud_eip_association" "default" {
 }
 
 resource "alicloud_snat_entry" "default" {
-  count             = "${var.new_nat_gateway == "false" ? 0 : length(var.vswitch_ids) > 0 ? length(var.vswitch_ids) : length(var.vswitch_cidrs)}"
+  count             = "${var.new_nat_gateway == "false" ? 0 : length(var.master_vswitch_ids) > 0 ? length(var.master_vswitch_ids) : length(var.master_vswitch_cidrs)}"
   snat_table_id     = "${alicloud_nat_gateway.default.snat_table_ids}"
-  source_vswitch_id = "${length(var.vswitch_ids) > 0 ? element(split(",", join(",", var.vswitch_ids)), count.index%length(split(",", join(",", var.vswitch_ids)))) : length(var.vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"
+  source_vswitch_id = "${length(var.master_vswitch_ids) > 0 ? element(split(",", join(",", var.master_vswitch_ids)), count.index%length(split(",", join(",", var.master_vswitch_ids)))) : length(var.master_vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"
   snat_ip           = "${alicloud_eip.default.ip_address}"
 }
 
 resource "alicloud_cs_kubernetes" "k8s" {
   count                 = "${var.k8s_number}"
   name                  = "${var.k8s_name_prefix == "" ? format("%s-%s", var.example_name, format(var.number_format, count.index+1)) : format("%s-%s", var.k8s_name_prefix, format(var.number_format, count.index+1))}"
-  vswitch_ids           = ["${length(var.vswitch_ids) > 0 ? element(split(",", join(",", var.vswitch_ids)), count.index%length(split(",", join(",", var.vswitch_ids)))) : length(var.vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"]
+  master_vswitch_ids    = ["${length(var.master_vswitch_ids) > 0 ? element(split(",", join(",", var.master_vswitch_ids)), count.index%length(split(",", join(",", var.master_vswitch_ids)))) : length(var.master_vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"]
+  worker_vswitch_ids    = ["${length(var.master_vswitch_ids) > 0 ? element(split(",", join(",", var.master_vswitch_ids)), count.index%length(split(",", join(",", var.master_vswitch_ids)))) : length(var.master_vswitch_cidrs) < 1 ? "" : element(split(",", join(",", alicloud_vswitch.vswitches.*.id)), count.index%length(split(",", join(",", alicloud_vswitch.vswitches.*.id))))}"]
   new_nat_gateway       = "${var.new_nat_gateway}"
   master_instance_types = "${var.master_instance_types}"
   worker_instance_types = "${var.worker_instance_types}"
-  worker_numbers        = "${var.k8s_worker_numbers}"
+  worker_number         = "${var.k8s_worker_number}"
   master_disk_category  = "${var.master_disk_category}"
   worker_disk_category  = "${var.worker_disk_category}"
   master_disk_size      = "${var.master_disk_size}"

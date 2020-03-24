@@ -46,13 +46,19 @@ variable "vswitch_name_prefix" {
   default     = ""
 }
 
-variable "vswitch_ids" {
+variable "worker_vswitch_ids" {
   description = "List of existing vswitch id."
   type        = "list"
   default     = []
 }
 
-variable "vswitch_cidrs" {
+variable "master_vswitch_ids" {
+  description = "List of existing vswitch id."
+  type        = "list"
+  default     = []
+}
+
+variable "master_vswitch_cidrs" {
   description = "List of cidr blocks used to create several new vswitches when 'vswitch_ids' is not specified."
   type        = "list"
   default     = ["10.1.2.0/24"]
@@ -67,7 +73,7 @@ variable "new_nat_gateway" {
 
 variable "master_instance_types" {
   description = "The ecs instance type used to launch master nodes. Default from instance typs datasource."
-  default     = ["ecs.n1.medium"]
+  default     = ["ecs.n1.medium", "ecs.n1.medium", "ecs.n1.medium"]
   type        = "list"
 }
 
@@ -107,9 +113,9 @@ variable "k8s_number" {
   default     = 1
 }
 
-variable "k8s_worker_numbers" {
+variable "k8s_worker_number" {
   description = "The number of worker nodes in each kubernetes cluster."
-  default     = [3]
+  default     = 3
 }
 
 variable "k8s_name_prefix" {
